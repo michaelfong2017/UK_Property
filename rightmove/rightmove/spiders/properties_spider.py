@@ -7,10 +7,10 @@
 import scrapy
 from lxml.etree import iterparse
 from io import BytesIO
-
+import re
 
 class PropertiesSpider(scrapy.Spider):
-    name = "properties"
+    name = 'properties'
     # allowed_domains = ["rightmove.co.uk"]
     
     '''
@@ -22,16 +22,33 @@ class PropertiesSpider(scrapy.Spider):
     '''
     
     start_urls = ['https://www.rightmove.co.uk/sitemap-properties-SW.xml']
+    
+    transaction_history_api_url_prefix = 'https://www.rightmove.co.uk/properties/api/soldProperty/transactionHistory/'
 
     def parse(self, response):
-        for event, element in iterparse(BytesIO(response.body), tag="{http://www.sitemaps.org/schemas/sitemap/0.9}loc"):
+        for event, element in iterparse(BytesIO(response.body), tag='{http://www.sitemaps.org/schemas/sitemap/0.9}loc'):
             print(element.text)
-            yield response.follow(element.text, callback=self.parse_property)
+            if (element.text.startswith('https://www.rightmove.co.uk/property-for-sale/')):
+                # if (element.text == 'https://www.rightmove.co.uk/property-for-sale/property-100177769.html'):
+                yield response.follow(element.text, callback=self.parse_property)
+                    # break
             element.clear()
 
     def parse_property(self, response):
-        print("reached")
-
+        print('parse_property')
+        match = re.search('\"deliveryPointId\"\:([0-9]+|null)', response.text)
+        if match is not None:
+            deliveryPointId = match.group(1)
+            if deliveryPointId.isnumeric():
+                yield response.follow(self.transaction_history_api_url_prefix + str(deliveryPointId), callback=self.parse_transaction_history)
+            else:
+                print(deliveryPointId)
+        else:
+            print("match is None")
+                
+    def parse_transaction_history(self, response):
+        print('parse_transaction_history')
+        print(response.body)
 
 # %%
 # import requests
