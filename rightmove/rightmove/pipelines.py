@@ -7,7 +7,7 @@
 # useful for handling different item types with a single interface
 from sqlalchemy.orm import sessionmaker
 from scrapy.exceptions import DropItem
-from tutorial.models import Quote, Author, Tag, db_connect, create_table
+from rightmove.models import Property, db_connect, create_table
 
 
 class SaveQuotesPipeline(object):
@@ -26,34 +26,15 @@ class SaveQuotesPipeline(object):
         This method is called for every item pipeline component
         """
         session = self.Session()
-        quote = Quote()
-        author = Author()
-        tag = Tag()
-        author.name = item["author_name"]
-        author.birthday = item["author_birthday"]
-        author.bornlocation = item["author_bornlocation"]
-        author.bio = item["author_bio"]
-        quote.quote_content = item["quote_content"]
-
-        # check whether the author exists
-        exist_author = session.query(Author).filter_by(name = author.name).first()
-        if exist_author is not None:  # the current author exists
-            quote.author = exist_author
-        else:
-            quote.author = author
-
-        # check whether the current quote has tags or not
-        if "tags" in item:
-            for tag_name in item["tags"]:
-                tag = Tag(name=tag_name)
-                # check whether the current tag already exists in the database
-                exist_tag = session.query(Tag).filter_by(name = tag.name).first()
-                if exist_tag is not None:  # the current tag exists
-                    tag = exist_tag
-                quote.tags.append(tag)
+        property = Property()
+        property.property_id = item['property_id']
+        property.bedrooms = item['property_bedrooms']
+        property.numberOfImages = item['property_numberOfImages']
+        property.numberOfFloorplans = item['property_numberOfFloorplans']
+        property.numberOfVirtualTours = item['property_numberOfVirtualTours']
 
         try:
-            session.add(quote)
+            session.add(property)
             session.commit()
 
         except:
@@ -79,9 +60,9 @@ class DuplicatesPipeline(object):
 
     def process_item(self, item, spider):
         session = self.Session()
-        exist_quote = session.query(Quote).filter_by(quote_content = item["quote_content"]).first()
-        if exist_quote is not None:  # the current quote exists
-            raise DropItem("Duplicate item found: %s" % item["quote_content"])
+        exist_property = session.query(Property).filter_by(property_id = item["property_id"]).first()
+        if exist_property is not None:  # the current quote exists
+            raise DropItem("Duplicate item found: %s" % item["property_id"])
             session.close()
         else:
             return item
