@@ -28,10 +28,19 @@ class SaveQuotesPipeline(object):
         session = self.Session()
         property = Property()
         property.property_id = item['property_id']
-        property.bedrooms = item['property_bedrooms']
-        property.numberOfImages = item['property_numberOfImages']
-        property.numberOfFloorplans = item['property_numberOfFloorplans']
-        property.numberOfVirtualTours = item['property_numberOfVirtualTours']
+        property.bedrooms = item['bedrooms']
+        property.numberOfImages = item['numberOfImages']
+        property.numberOfFloorplans = item['numberOfFloorplans']
+        property.numberOfVirtualTours = item['numberOfVirtualTours']
+        property.summary = item['summary']
+        property.displayAddress = item['displayAddress']
+        property.countryCode = item['countryCode']
+        property.location_latitude = item['location_latitude']
+        property.location_longitude = item['location_longitude']
+        property.propertySubType = item['propertySubType']
+        property.listingUpdate_reason = item['listingUpdate_reason']
+        property.listingUpdate_date = item['listingUpdate_date']
+        property.premiumListing = item['premiumListing']
 
         try:
             session.add(property)

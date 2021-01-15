@@ -10,10 +10,19 @@ from scrapy.item import Item, Field
 
 class PropertyItem(Item):
     property_id = Field()
-    property_bedrooms = Field()
-    property_numberOfImages = Field()
-    property_numberOfFloorplans = Field()
-    property_numberOfVirtualTours = Field()
+    bedrooms = Field()
+    numberOfImages = Field()
+    numberOfFloorplans = Field()
+    numberOfVirtualTours = Field()
+    summary = Field()
+    displayAddress = Field()
+    countryCode = Field()
+    location_latitude = Field()
+    location_longitude = Field()
+    propertySubType = Field()
+    listingUpdate_reason = Field()
+    listingUpdate_date = Field()
+    premiumListing = Field()
 
 
 # def remove_quotes(text):

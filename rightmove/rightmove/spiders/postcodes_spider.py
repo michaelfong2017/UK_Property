@@ -10,7 +10,7 @@ from rightmove.items import PropertyItem
 import orjson
 
 class PropertiesSpider(scrapy.Spider):
-    name = 'properties'
+    name = 'postcodes'
     # allowed_domains = ["rightmove.co.uk"]
     
     '''
@@ -35,9 +35,11 @@ class PropertiesSpider(scrapy.Spider):
     start_urls = []
     
 
-    for i in range(len(prices)-1):
-        start_urls.append(f'{sw19_buy_url}&minPrice={prices[i]}&maxPrice={prices[i+1]-1}')
+    # for i in range(len(prices)-1):
+    #     start_urls.append(f'{sw19_buy_url}&minPrice={prices[i]}&maxPrice={prices[i+1]-1}')
     
+    for i in range(100):
+        start_urls.append(f'https://www.rightmove.co.uk/api/_search?locationIdentifier=POSTCODE%5E{i+1}&channel=BUY')
     
     print(start_urls)
     
@@ -67,22 +69,12 @@ class PropertiesSpider(scrapy.Spider):
             for property in properties:
                 loader = ItemLoader(item=PropertyItem())
                 loader.add_value('property_id', property['id'])
-                loader.add_value('bedrooms', property['bedrooms'])
-                loader.add_value('numberOfImages', property['numberOfImages'])
-                loader.add_value('numberOfFloorplans', property['numberOfFloorplans'])
-                loader.add_value('numberOfVirtualTours', property['numberOfVirtualTours'])
-                loader.add_value('summary', property['summary'])
-                loader.add_value('displayAddress', property['displayAddress'])
-                loader.add_value('countryCode', property['countryCode'])
-                loader.add_value('location_latitude', property['location']['latitude'])
-                loader.add_value('location_longitude', property['location']['longitude'])
-                loader.add_value('propertySubType', property['propertySubType'])
-                loader.add_value('listingUpdate_reason', property['listingUpdate']['listingUpdateReason'])
-                loader.add_value('listingUpdate_date', property['listingUpdate']['listingUpdateDate'])
-                loader.add_value('premiumListing', property['premiumListing'])
-
+                loader.add_value('property_bedrooms', property['bedrooms'])
+                loader.add_value('property_numberOfImages', property['numberOfImages'])
+                loader.add_value('property_numberOfFloorplans', property['numberOfFloorplans'])
+                loader.add_value('property_numberOfVirtualTours', property['numberOfVirtualTours'])
                 
-                yield loader.load_item()
+                # yield loader.load_item()
 
 
     def parse_property(self, response):

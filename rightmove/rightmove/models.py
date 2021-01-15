@@ -29,6 +29,16 @@ class Property(Base):
     numberOfImages = Column('numberOfImages', Integer)
     numberOfFloorplans = Column('numberOfFloorplans', Integer)
     numberOfVirtualTours = Column('numberOfVirtualTours', Integer)
+    summary = Column('summary', Text())
+    displayAddress = Column('displayAddress', Text())
+    countryCode = Column('countryCode', Text())
+    location_latitude = Column('location_latitude', Float)
+    location_longitude = Column('location_longitude', Float)
+    propertySubType = Column('propertySubType', Text())
+    listingUpdate_reason = Column('listingUpdate_reason', Text())
+    listingUpdate_date = Column('listingUpdate_date', Text())
+    premiumListing = Column('premiumListing', Integer)
+
 
 
 # Association Table for Many-to-Many relationship between Quote and Tag
