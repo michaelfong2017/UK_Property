@@ -63,7 +63,7 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'rightmove.pipelines.DuplicatesPipeline': 100,
+    # 'rightmove.pipelines.DuplicatesPipeline': 100,
     'rightmove.pipelines.SaveQuotesPipeline': 200,
 }
 
@@ -88,11 +88,19 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+# CONNECTION_STRING = "{drivername}://{user}:{passwd}@{host}:{port}/{db_name}?charset=utf8".format(
+#      drivername="mysql",
+#      user="root",
+#      passwd="st!DraJagU6uYA@p",
+#      host="192.168.33.102",
+#      port="3502",
+#      db_name="uk_property",
+# )
 CONNECTION_STRING = "{drivername}://{user}:{passwd}@{host}:{port}/{db_name}?charset=utf8".format(
      drivername="mysql",
      user="root",
-     passwd="st!DraJagU6uYA@p",
-     host="192.168.33.102",
-     port="3502",
+     passwd="P@ssw0rd",
+     host="localhost",
+     port="3306",
      db_name="uk_property",
 )
