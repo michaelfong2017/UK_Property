@@ -8,6 +8,7 @@ import scrapy
 from scrapy.loader import ItemLoader
 from rightmove.items import PropertyItem
 import orjson
+import re
 
 class PropertiesSpider(scrapy.Spider):
     name = 'properties'
@@ -80,26 +81,68 @@ class PropertiesSpider(scrapy.Spider):
                 loader.add_value('listingUpdate_reason', property['listingUpdate']['listingUpdateReason'])
                 loader.add_value('listingUpdate_date', property['listingUpdate']['listingUpdateDate'])
                 loader.add_value('premiumListing', property['premiumListing'])
+                loader.add_value('featuredProperty', property['featuredProperty'])
+                loader.add_value('price_amount', property['price']['amount'])
+                loader.add_value('price_currencyCode', property['price']['currencyCode'])
+                loader.add_value('price_frequency', property['price']['frequency'])
+                try:
+                    loader.add_value('distance', property['distance'])
+                except KeyError:
+                    pass
+                loader.add_value('transactionType', property['transactionType'])
+                loader.add_value('commercial', property['commercial'])
+                loader.add_value('development', property['development'])
+                loader.add_value('residential', property['residential'])
+                loader.add_value('students', property['students'])
+                loader.add_value('auction', property['auction'])
+                loader.add_value('feesApply', property['feesApply'])
+                try:
+                    loader.add_value('feesApplyText', property['feesApplyText'])
+                except KeyError:
+                    pass
+                loader.add_value('propertyUrl', property['propertyUrl'])
+                loader.add_value('contactUrl', property['contactUrl'])
+                try:
+                    loader.add_value('staticMapUrl', property['staticMapUrl'])
+                except KeyError:
+                    pass
+                loader.add_value('channel', property['channel'])
+                loader.add_value('firstVisibleDate', property['firstVisibleDate'])
+                loader.add_value('heading', property['heading'])
+                loader.add_value('displayStatus', property['displayStatus'])
+                loader.add_value('formattedBranchName', property['formattedBranchName'])
+                loader.add_value('addedOrReduced', property['addedOrReduced'])
+                loader.add_value('isRecent', property['isRecent'])
+                loader.add_value('formattedDistance', property['formattedDistance'])
+                loader.add_value('propertyTypeFullDescription', property['propertyTypeFullDescription'])
+                loader.add_value('enhancedListing', property['enhancedListing'])
+                loader.add_value('hasBrandPlus', property['hasBrandPlus'])
 
                 
-                yield loader.load_item()
+                property_item = loader.load_item()
+                
+                yield response.follow(f'https://www.rightmove.co.uk{property["propertyUrl"]}', callback=self.parse_property, meta={'property_item': property_item})
 
 
     def parse_property(self, response):
-        print('parse_property')
+        property_item = response.meta['property_item']
+        
         match = re.search('\"deliveryPointId\"\:([0-9]+|null)', response.text)
         if match is not None:
             deliveryPointId = match.group(1)
             if deliveryPointId.isnumeric():
-                yield response.follow(self.transaction_history_api_url_prefix + str(deliveryPointId), callback=self.parse_transaction_history)
+                yield response.follow(self.transaction_history_api_url_prefix + str(deliveryPointId), callback=self.parse_transaction_history, meta={'property_item': property_item})
             else:
                 print(deliveryPointId)
         else:
             print('match is None')
                 
     def parse_transaction_history(self, response):
-        print('parse_transaction_history')
-        print(response.body)
+        property_item = response.meta['property_item']
+
+        loader = ItemLoader(item=property_item, response=response)
+        loader.add_value('soldPropertyTransactionHistories', response.body)
+        yield loader.load_item()
 
 # %%
 # import requests

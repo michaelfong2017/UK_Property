@@ -41,6 +41,45 @@ class SaveQuotesPipeline(object):
         property.listingUpdate_reason = item['listingUpdate_reason']
         property.listingUpdate_date = item['listingUpdate_date']
         property.premiumListing = item['premiumListing']
+        property.featuredProperty = item['featuredProperty']
+        property.price_amount = item['price_amount']
+        property.price_currencyCode = item['price_currencyCode']
+        property.price_frequency = item['price_frequency']
+        try:
+            property.distance = item['distance']
+        except KeyError:
+            pass
+        property.transactionType = item['transactionType']
+        property.commercial = item['commercial']
+        property.development = item['development']
+        property.residential = item['residential']
+        property.students = item['students']
+        property.auction = item['auction']
+        property.feesApply = item['feesApply']
+        try:
+            property.feesApplyText = item['feesApplyText']
+        except KeyError:
+            pass
+        property.propertyUrl = item['propertyUrl']
+        property.contactUrl = item['contactUrl']
+        try:
+            property.staticMapUrl = item['staticMapUrl']
+        except KeyError:
+            pass
+        property.channel = item['channel']
+        property.firstVisibleDate = item['firstVisibleDate']
+        property.heading = item['heading']
+        property.displayStatus = item['displayStatus']
+        property.formattedBranchName = item['formattedBranchName']
+        property.addedOrReduced = item['addedOrReduced']
+        property.isRecent = item['isRecent']
+        property.formattedDistance = item['formattedDistance']
+        property.propertyTypeFullDescription = item['propertyTypeFullDescription']
+        property.enhancedListing = item['enhancedListing']
+        property.hasBrandPlus = item['hasBrandPlus']
+        
+        property.soldPropertyTransactionHistories = item['soldPropertyTransactionHistories']
+        
 
         try:
             session.add(property)
