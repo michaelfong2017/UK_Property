@@ -15,8 +15,8 @@ class PostcodesSpider(scrapy.Spider):
     
     start_urls = []
     
-    for i in range(500):
-        start_urls.append(f'https://www.rightmove.co.uk/property-for-sale/find.html?locationIdentifier=POSTCODE%5E{i+1}')
+    for i in range(1):
+        start_urls.append(f'https://www.rightmove.co.uk/property-for-sale/find.html?locationIdentifier=POSTCODE%5E{i+1+1753751}')
         
 
     def parse(self, response):
